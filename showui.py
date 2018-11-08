@@ -160,6 +160,9 @@ def draw_bb(icam, frame, img, startFrame, find_ind):
     return img
 
 
+def dynamic_drawbb(icam, frame, img, startFrame, find_ind, show_id):
+
+
 def worldTomap(point_x, point_y):
     # get the map point
     image_points = np.array([[307.4323, 469.2366], [485.2483, 708.9507]])
