@@ -2,6 +2,9 @@
 
 ## Introduction
 This project is for the tracking player
+the player is divided into two part:
+1. play the tracker with choosing the camera and starting frame
+2. play the tracker with specified ID
 
 ## Development Environment
 - Python 3.5 + tensorflow + pyqt5
@@ -21,3 +24,4 @@ This project is for the tracking player
 
 ## Version Update Information
 - 2018/11/8: upload the total python file
+- 2018/11/9: Now, we can change the camera number when we play part 2 and the ID go to another camera
