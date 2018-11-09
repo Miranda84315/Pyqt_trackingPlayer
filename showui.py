@@ -222,26 +222,27 @@ def show_cam(icam):
         icam) + '.jpg'
     background_img = Image.open(path)
     img = cv2.cvtColor(np.asarray(background_img), cv2.COLOR_RGB2BGR)
-    img = cv2.resize(img, (330, 180))
+    img = cv2.resize(img, (320, 180))
     return img
 
 
 def draw_bb_id(icam, frame, img):
     # draw the bounding box
-    img = cv2.resize(img, (330, 180))
-    ind = [i for i in range(len(data_part_id)) if data_part_id[i][1] <= frame]
+    img = cv2.resize(img, (320, 180))
+    ind = [i for i in range(len(data_part_id)) if data_part_id[i][1] == frame]
 
+    if len(ind) == 0:
+        return False, img
     for i in ind:
         left_x = int(data_part_id[i][3] / 6)
         left_y = int(data_part_id[i][4] / 6)
         right_x = int((data_part_id[i][3] + data_part_id[i][5]) / 6)
         right_y = int((data_part_id[i][4] + data_part_id[i][6]) / 6)
         color_id = tuple(color[int(data_part_id[i][2])])
-        if data_part_id[i][1] == frame:
-            cv2.rectangle(img, (left_x, left_y), (right_x, right_y), color_id,
+        cv2.rectangle(img, (left_x, left_y), (right_x, right_y), color_id,
                           2)
 
-    return img
+    return True, img
 
 
 class AppWindow(QDialog):
@@ -468,7 +469,7 @@ class AppWindow(QDialog):
         cap = cv2.VideoCapture(filename)
         cap.set(1, part_frame)
         ret, frame_img = cap.read()
-        img = draw_bb_id(icam, start_frame, frame_img)
+        check, img = draw_bb_id(icam, start_frame, frame_img)
         return img
 
     def show_id_frame(self, icam, current_frame):
@@ -479,7 +480,21 @@ class AppWindow(QDialog):
             self.part_cam_previous = part_cam
             self.cap = cv2.VideoCapture(filename)
         ret, frame_img = self.cap.read()
-        img = draw_bb_id(icam, current_frame, frame_img)
+        check, img = draw_bb_id(icam, current_frame, frame_img)
+        if check is False:
+            print('change cam')
+            '''
+            Solve this
+            '''
+            index = np.argwhere(self.cam_check == self.turn_icam)
+            print('index = ' + str(index))
+            self.cam_check = np.delete(self.cam_check, index)
+            print('new cam_check:' + str(self.cam_check))
+            self.cam_check_start = np.delete(self.cam_check_start, index)
+            print('new cam_check_start:' + str(self.cam_check_start))
+            self.turn_icam = self.cam_check[np.argmin(self.cam_check_start)]
+            print('new camera:' + str(self.turn_icam))
+            self.current_frame = int(id_data[self.id - 1, self.turn_icam])
 
         return img
 
