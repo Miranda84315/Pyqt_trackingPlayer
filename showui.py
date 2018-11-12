@@ -239,8 +239,7 @@ def draw_bb_id(icam, frame, img):
         right_x = int((data_part_id[i][3] + data_part_id[i][5]) / 6)
         right_y = int((data_part_id[i][4] + data_part_id[i][6]) / 6)
         color_id = tuple(color[int(data_part_id[i][2])])
-        cv2.rectangle(img, (left_x, left_y), (right_x, right_y), color_id,
-                          2)
+        cv2.rectangle(img, (left_x, left_y), (right_x, right_y), color_id, 2)
 
     return True, img
 
@@ -384,7 +383,8 @@ class AppWindow(QDialog):
                 self.turn_icam) + '\nFrame: ' + str(self.current_frame)
         self.ui.label_4.setText(label_text)
 
-        part_cam, part_frame = calucate_part(self.turn_icam, self.current_frame)
+        part_cam, part_frame = calucate_part(self.turn_icam,
+                                             self.current_frame)
         self.part_cam_previous = part_cam
 
         filename = 'D:/Code/DukeMTMC/videos/camera' + str(
@@ -473,28 +473,39 @@ class AppWindow(QDialog):
         return img
 
     def show_id_frame(self, icam, current_frame):
-        part_cam, part_frame = calucate_part(icam, self.current_frame)
+        self.icam = icam
+        part_cam, part_frame = calucate_part(self.icam, self.current_frame)
         if part_cam != self.part_cam_previous:
             filename = 'D:/Code/DukeMTMC/videos/camera' + str(
                 self.icam) + '/0000' + str(part_cam) + '.MTS'
             self.part_cam_previous = part_cam
             self.cap = cv2.VideoCapture(filename)
         ret, frame_img = self.cap.read()
-        check, img = draw_bb_id(icam, current_frame, frame_img)
+        check, img = draw_bb_id(self.icam, current_frame, frame_img)
         if check is False:
             print('change cam')
-            '''
-            Solve this
-            '''
-            index = np.argwhere(self.cam_check == self.turn_icam)
-            print('index = ' + str(index))
+            temp_cam_check = np.asarray(self.cam_check)
+            index = np.argwhere(temp_cam_check == self.turn_icam)
             self.cam_check = np.delete(self.cam_check, index)
-            print('new cam_check:' + str(self.cam_check))
             self.cam_check_start = np.delete(self.cam_check_start, index)
-            print('new cam_check_start:' + str(self.cam_check_start))
-            self.turn_icam = self.cam_check[np.argmin(self.cam_check_start)]
-            print('new camera:' + str(self.turn_icam))
-            self.current_frame = int(id_data[self.id - 1, self.turn_icam])
+            if len(self.cam_check) > 0:
+                self.turn_icam = self.cam_check[np.argmin(
+                    self.cam_check_start)]
+                print('index = ' + str(index))
+                print('new cam_check:' + str(self.cam_check))
+                print('new cam_check_start:' + str(self.cam_check_start))
+                print('new camera:' + str(self.turn_icam))
+                self.current_frame = int(id_data[self.id - 1, self.turn_icam])
+                self.icam = self.turn_icam
+                part_cam, part_frame = calucate_part(self.icam,
+                                                     self.current_frame)
+                filename = 'D:/Code/DukeMTMC/videos/camera' + str(
+                    self.icam) + '/0000' + str(part_cam) + '.MTS'
+                self.part_cam_previous = part_cam
+                self.cap = cv2.VideoCapture(filename)
+                self.cap.set(1, part_frame)
+            else:
+                self.timer.timeout.connect(self.stop_video)
 
         return img
 
