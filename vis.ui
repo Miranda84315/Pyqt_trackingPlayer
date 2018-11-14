@@ -175,21 +175,6 @@
      <string>56000</string>
     </property>
    </item>
-   <item>
-    <property name="text">
-     <string>64000</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>72000</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>80000</string>
-    </property>
-   </item>
   </widget>
   <widget class="QLabel" name="label3">
    <property name="geometry">
@@ -269,17 +254,7 @@
    </item>
    <item>
     <property name="text">
-     <string>64000</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>72000</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>80954</string>
+     <string>59820</string>
     </property>
    </item>
   </widget>
