@@ -152,7 +152,7 @@ def draw_bb(icam, frame, img, startFrame, find_ind):
                           (right_x + 3, left_y), color_id, -1)
             cv2.putText(img, label_text, (left_x, left_y),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
-            cv2.putText(img, duaration_text, (left_x + 30, left_y - 30),
+            cv2.putText(img, duaration_text, (left_x, left_y - 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
         cv2.circle(img, (int(data_part[i][3] + data_part[i][5] / 2), right_y),
                    7, color_id, -1)
@@ -581,8 +581,8 @@ class AppWindow(QDialog):
         self.ui.subtab2_Layout.addWidget(self.ui.cam8_box, 3, 1)
 
         # combine 2 tab to right_layout
-        self.ui.tabWidget.addTab(self.ui.subtab_widget, 'Video')
-        self.ui.tabWidget.addTab(self.ui.subtab2_widget, 'All Camera')
+        self.ui.tabWidget.addTab(self.ui.subtab_widget, 'Tracking Video')
+        self.ui.tabWidget.addTab(self.ui.subtab2_widget, 'Specify ID')
         self.ui.right_Layout.addWidget(self.ui.tabWidget)
         self.ui.tabWidget.removeTab(0)
         self.ui.tabWidget.removeTab(0)
@@ -613,6 +613,20 @@ class AppWindow(QDialog):
         self.ui.info_widget.setStyleSheet('''
         QWidget{background:	#e0e0e0;
         border-bottom-left-radius:10px;}
+        ''')
+
+        self.ui.tabWidget.setStyleSheet('''
+        QTabWidget{
+        color:#232C51;
+        background:white;
+        border:none;
+        border-top-right-radius:10px;
+        border-bottom-right-radius:10px;}
+        QTabWidget::tab-bar{alignment: center;}
+        QTabWidget::pane{border:none;}
+        QTabBar::tab {font:16px Consolas;color: white;max-width: 300px; min-width:300px; min-height:20px;padding: 5px;}
+        QTabBar::tab:selected, QTabBar::tab:hover {background:#99CCCC; border-radius:5px;}
+        QTabBar::tab:!selected {background:#e0efef; border-radius:5px; margin-top: 2px;}
         ''')
 
         self.ui.lefttop_widget.setStyleSheet('''
